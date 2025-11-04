@@ -1,7 +1,9 @@
 .classpath
 *.jar
-.idea/*
+**/.idea/*
+.venv/*
 *.pyc
+*.pyd
 .DS_Store
 dist/
 build/
@@ -9,4 +11,9 @@ build/
 *.html
 *.egg-info
 *.iml
+hs_err*
 target
+**/c/cmake-build-debug/
+3rd_party/
+pemja_dep_install/
+

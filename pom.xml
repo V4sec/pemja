@@ -21,7 +21,7 @@
 
     <groupId>com.alibaba</groupId>
     <artifactId>pemja</artifactId>
-    <version>0.5-SNAPSHOT</version>
+    <version>0.7-SNAPSHOT</version>
 
     <packaging>jar</packaging>
 
@@ -30,6 +30,10 @@
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <junit5.version>5.7.2</junit5.version>
+        <spotless.version>2.27.1</spotless.version>
+        <slf4j.version>1.7.36</slf4j.version>
+        <log4j.version>2.17.1</log4j.version>
+        <spotless.skip>false</spotless.skip>
     </properties>
 
     <name>PemJa</name>
@@ -45,14 +49,14 @@
         </license>
     </licenses>
     <distributionManagement>
-        <snapshotRepository>
-            <id>snapshot</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
-        </snapshotRepository>
         <repository>
-            <id>release</id>
+            <id>oss</id>
             <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
         </repository>
+        <snapshotRepository>
+            <id>oss</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+        </snapshotRepository>
     </distributionManagement>
 
     <developers>
@@ -86,6 +90,35 @@
             <artifactId>junit-vintage-engine</artifactId>
             <version>${junit5.version}</version>
             <scope>test</scope>
+        </dependency>
+
+        <!-- log -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-slf4j-impl</artifactId>
+            <version>${log4j.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+            <version>${log4j.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>${log4j.version}</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 
@@ -121,6 +154,46 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>com.diffplug.spotless</groupId>
+                <artifactId>spotless-maven-plugin</artifactId>
+                <version>${spotless.version}</version>
+                <configuration>
+                    <skip>${spotless.skip}</skip>
+                    <java>
+                        <googleJavaFormat>
+                            <version>1.7</version>
+                            <style>AOSP</style>
+                        </googleJavaFormat>
+
+                        <!-- \# refers to the static imports -->
+                        <importOrder>
+                            <order>,javax,java,scala,\#</order>
+                        </importOrder>
+
+                        <removeUnusedImports />
+                    </java>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>spotless-check</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.sonatype.central</groupId>
+                <artifactId>central-publishing-maven-plugin</artifactId>
+                <version>0.8.0</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <publishingServerId>oss</publishingServerId>
+                </configuration>
             </plugin>
         </plugins>
     </build>

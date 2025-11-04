@@ -14,8 +14,16 @@
 #ifndef _Included_java_util_Map
 #define _Included_java_util_Map
 
+#include <jni.h>
+
 jobject JavaMap_NewHashMap(JNIEnv*);
 jobject JavaMap_entrySet(JNIEnv*, jobject);
 jobject JavaMap_put(JNIEnv* env, jobject, jobject, jobject);
+jobject JavaMap_get(JNIEnv*, jobject, jobject);
+jobject JavaMap_remove(JNIEnv*, jobject, jobject);
+jboolean JavaMap_containsKey(JNIEnv*, jobject, jobject);
+jint JavaMap_size(JNIEnv*, jobject);
+jobject JavaMap_keySet(JNIEnv*, jobject);
+jobject JavaMap_values(JNIEnv*, jobject);
 
 #endif
